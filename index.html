@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validador DNI/NIF/CIF de España gratis online</title>
+<meta name="description" content="Valida DNI, NIE y CIF/NIF de España gratis online. Comprueba al instante la letra de control y si el documento es válido.">
+<meta name="keywords" content="validador DNI, validar DNI, validador NIF, validar NIF, validador CIF, validar CIF online gratis">
+<meta name="robots" content="index, follow">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #eef0f3;
+    color: #1f2933;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 48px 16px;
+  }
+  main {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    padding: 40px 44px 36px;
+  }
+  h1 { font-size: 1.7rem; font-weight: 700; margin-bottom: 8px; }
+  .sub { color: #52606d; font-size: 0.95rem; margin-bottom: 28px; }
+  label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
+  .row { display: flex; gap: 12px; align-items: flex-start; }
+  input#doc {
+    flex: 1;
+    font-size: 1.3rem;
+    font-family: inherit;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    border: 2px solid #cbd2d9;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input#doc:focus { border-color: #2563eb; }
+  button {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 26px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover { background: #1d4ed8; }
+  #resultado {
+    margin-top: 22px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    min-height: 1.4em;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  #resultado.valido   { color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; }
+  #resultado.invalido { color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; }
+  #resultado.neutro   { color: #52606d; background: #f8fafc; border: 1px solid #e2e8f0; }
+  .ejemplos { margin-top: 26px; font-size: 0.85rem; color: #7b8794; line-height: 1.7; }
+  .ejemplos b { color: #52606d; }
+  footer { margin-top: 28px; font-size: 0.75rem; color: #9aa5b1; text-align: center; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Validador DNI/NIF/CIF de España</h1>
+  <p class="sub">Escribe un documento y comprueba al instante si su letra de control es correcta.</p>
+
+  <label for="doc">Documento</label>
+  <div class="row">
+    <input id="doc" type="text" autocomplete="off" spellcheck="false"
+           placeholder="23914180E · X1234567L · B1234567S" maxlength="9">
+    <button id="btn" type="button">Validar</button>
+  </div>
+
+  <div id="resultado" class="neutro">Introduce un DNI, NIE o CIF/NIF para validar.</div>
+
+  <div class="ejemplos">
+    <b>Formatos aceptados:</b><br>
+    DNI: 8 dígitos + letra (ej. 23914180E) · NIE: X/Y/Z + 7 dígitos + letra (ej. X1234567L) · CIF/NIF: letra P, Q, R, S o dígito + 8 dígitos + letra de control (ej. B1234567S).
+  </div>
+
+  <footer>Validación 100% en tu navegador. Sin envíos, sin registro, gratis.</footer>
+</main>
+
+<script>
+'use strict';
+// Tabla OFICIAL española de letras (la que hace pasar el test duro DNI 23914180E -> E).
+var TABLA = 'TRWAGMYFPDXBNJZSQVHLCKE';
+var VAL = {0:1,1:0,2:5,3:4,4:7,5:6,6:3,7:2,8:9,9:8};
+
+function letraDNI(digitos) {
+  return TABLA[parseInt(digitos, 10) % 23];
+}
+
+function validarDNI(texto) {
+  if (!/^\d{8}[A-Z]$/.test(texto)) return null;
+  var esperada = letraDNI(texto.slice(0, 8));
+  return { tipo: 'DNI', recibida: texto[8], ok: texto[8] === esperada, esperada: esperada };
+}
+
+function validarNIE(texto) {
+  if (!/^[XYZ]\d{7}[A-Z]$/.test(texto)) return null;
+  var digitos = texto.slice(0, 8).replace('X', '0').replace('Y', '1').replace('Z', '2');
+  var esperada = letraDNI(digitos);
+  return { tipo: 'NIE', recibida: texto[8], ok: texto[8] === esperada, esperada: esperada };
+}
+
+function validarCIF(texto) {
+  if (!/^[PQRS0-9]\d{8}$/.test(texto)) return null;
+  var d = texto.slice(1).split('').map(Number);
+  var suma = d[0] + d[2] + d[4] + d[6];
+  for (var i = 1; i <= 7; i += 2) suma += VAL[d[i]];
+  var esperada = TABLA[suma % 23];
+  return { tipo: 'CIF/NIF', recibida: texto[0], ok: texto[0] === esperada, esperada: esperada };
+}
+
+function validar(texto) {
+  texto = texto.trim().toUpperCase();
+  return validarDNI(texto) || validarNIE(texto) || validarCIF(texto);
+}
+
+(function () {
+  var input = document.getElementById('doc');
+  var btn = document.getElementById('btn');
+  var resultado = document.getElementById('resultado');
+
+  function render() {
+    var texto = input.value.trim().toUpperCase();
+    if (texto.length < 9) {
+      resultado.className = 'neutro';
+      resultado.textContent = 'Introduce un DNI, NIE o CIF/NIF para validar.';
+      return;
+    }
+    var r = validar(texto);
+    if (!r) {
+      resultado.className = 'invalido';
+      resultado.textContent = 'INVALIDO: formato no reconocido (DNI: 8 dígitos+letra · NIE: X/Y/Z+7 dígitos+letra · CIF/NIF: letra P,Q,R,S o dígito + 8 dígitos).';
+      return;
+    }
+    if (r.ok) {
+      resultado.className = 'valido';
+      resultado.textContent = 'VALIDO: ' + r.tipo + ' correcto (letra ' + r.esperada + ').';
+    } else {
+      resultado.className = 'invalido';
+      resultado.textContent = 'INVALIDO: la letra esperada para el ' + r.tipo + ' sería ' + r.esperada + ' (pones ' + r.recibida + ').';
+    }
+  }
+
+  input.addEventListener('input', render);
+  btn.addEventListener('click', render);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') render(); });
+})();
+</script>
+</body>
+</html>
