@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validar IBAN español online gratis — comprueba el CCC y los dígitos de control</title>
+<meta name="description" content="Comprueba si un IBAN español es válido al instante: estructura ES + 22 dígitos, dígitos de control del CCC y módulo 97. Gratis, sin registro y sin enviar datos.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://facturarapida.github.io/validador/iban/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Validar IBAN español online gratis">
+<meta property="og:description" content="Comprueba el CCC y el módulo 97 de un IBAN español. Sin registro, 100% local.">
+<meta property="og:url" content="https://facturarapida.github.io/validador/iban/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Validador de IBAN español","url":"https://facturarapida.github.io/validador/iban/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (navegador)","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"Validación de IBAN español: estructura, dígitos de control del CCC y módulo 97. Se ejecuta en el navegador."}
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#eef0f3;color:#1f2933;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:48px 16px}
+  main{width:100%;max-width:780px;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.08);padding:36px 40px 32px}
+  .back{font-size:.85rem;color:#52606d;text-decoration:none}
+  h1{font-size:1.55rem;margin:10px 0 8px}
+  p.sub{color:#52606d;margin-bottom:24px;line-height:1.5}
+  label{display:block;font-weight:600;margin-bottom:8px}
+  input{width:100%;font-size:1.15rem;letter-spacing:1px;padding:14px;border:2px solid #cbd2d9;border-radius:8px;text-transform:uppercase}
+  input:focus{outline:none;border-color:#2563eb}
+  button{margin-top:14px;width:100%;font-size:1.05rem;font-weight:700;padding:13px;background:#2563eb;color:#fff;border:0;border-radius:8px;cursor:pointer}
+  button:hover{background:#1d4ed8}
+  #resultado{margin-top:20px;padding:14px 16px;border-radius:8px;font-size:1.02rem;font-weight:600;display:none;line-height:1.45}
+  .valido{display:block!important;background:#e8f7ee;color:#136b36;border:1px solid #b7e4c7}
+  .invalido{display:block!important;background:#fdecec;color:#a12a2a;border:1px solid #f5c6c6}
+  .error{display:block!important;background:#fff8e1;color:#8a6d0b;border:1px solid #f0e2ae;font-weight:500}
+  .detalle{margin-top:8px;font-size:.88rem;font-weight:400;opacity:.9}
+  .desglose{margin-top:16px;font-size:.9rem;color:#52606d;line-height:1.6;display:none}
+  .desglose b{color:#1f2933}
+  .banner{margin-top:28px;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-radius:10px;padding:20px 22px;line-height:1.5}
+  .banner strong{display:block;font-size:1.1rem;margin-bottom:6px}
+  .banner a{color:#ffd54d;font-weight:700;text-decoration:none}
+  footer{margin-top:22px;font-size:.8rem;color:#7b8794;line-height:1.5}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="../">← Validador de NIF</a>
+  <h1>Validador de IBAN español</h1>
+  <p class="sub">Pega el IBAN y comprueba si está bien formado: estructura ES, dígitos de control del CCC y módulo 97.<br>Formatos: ES91 2100 0418 4502 0005 1332 · IBAN de otro país (2 letras + 2 dígitos + cuenta).</p>
+
+  <label for="iban">IBAN</label>
+  <input id="iban" type="text" placeholder="ES91 2100 0418 4502 0005 1332" autocomplete="off" spellcheck="false" autofocus>
+  <button id="btn" type="button">Validar</button>
+
+  <div id="resultado" role="status" aria-live="polite"></div>
+  <div id="desglose" class="desglose"></div>
+
+  <div class="banner">
+    <strong>¿Facturas con el NIF mal puesto?</strong>
+    FacturaRapida valida NIF, NIE y CIF y genera la factura A4. 9 EUR, pago único:
+    <a href="https://payhip.com/b/5JhQO" target="_blank" rel="noopener">payhip.com/b/5JhQO</a>
+  </div>
+
+  <footer>
+    Cálculo: se quitan espacios, se mueven los cuatro primeros caracteres al final, cada letra se convierte en su número (A=10 … Z=35) y el resto debe ser 1 al dividir entre 97 (ISO 13616). En España, el CCC añade dos dígitos de control: el primero cubre banco y sucursal (pesos 4,8,5,10,9,7,3,6) y el segundo la cuenta (pesos 1,2,4,8,5,10,9,7,3,6), con 11 − suma módulo 11. Todo se calcula en tu navegador.
+  </footer>
+</main>
+
+<script>
+(function () {
+  var PESOS1 = [4,8,5,10,9,7,3,6];
+  var PESOS2 = [1,2,4,8,5,10,9,7,3,6];
+
+  function normalizar(s) {
+    return s.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  }
+
+  function aNumero(str) {
+    var out = "";
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charAt(i);
+      out += /[A-Z]/.test(c) ? (c.charCodeAt(0) - 55) : c;
+    }
+    return out;
+  }
+
+  function mod97(numStr) {
+    var resto = 0;
+    for (var i = 0; i < numStr.length; i++) {
+      resto = (resto * 10 + parseInt(numStr.charAt(i), 10)) % 97;
+    }
+    return resto;
+  }
+
+  function digitoControl(digitos, pesos) {
+    var suma = 0;
+    for (var i = 0; i < pesos.length; i++) suma += parseInt(digitos.charAt(i), 10) * pesos[i];
+    var r = 11 - (suma % 11);
+    if (r === 10) r = 1;
+    if (r === 11) r = 0;
+    return String(r);
+  }
+
+  function validarIBAN(raw) {
+    var iban = normalizar(raw);
+    if (!iban) return { estado: "vacio" };
+    if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(iban)) {
+      return { estado: "error", msg: "Formato no reconocido. Debe empezar por dos letras y dos dígitos, y la longitud debe ser de 15 a 34 caracteres." };
+    }
+    var reordenado = aNumero(iban.slice(4) + iban.slice(0, 4));
+    var resto = mod97(reordenado);
+    var ok = resto === 1;
+    var info = { pais: iban.slice(0, 2), longitud: iban.length, resto: resto, ok: ok };
+
+    if (iban.slice(0, 2) === "ES") {
+      if (iban.length !== 24) {
+        return { estado: "invalido", msg: "Un IBAN español tiene 24 caracteres (ES + 2 de control + 20 del CCC). Este tiene " + iban.length + ".", info: info };
+      }
+      var ccc = iban.slice(4);
+      var dc1 = digitoControl(ccc.slice(0, 8), PESOS1);
+      var dc2 = digitoControl(ccc.slice(10), PESOS2);
+      info.banco = ccc.slice(0, 4);
+      info.sucursal = ccc.slice(4, 8);
+      info.dcEsperado = dc1 + dc2;
+      info.dcReal = ccc.slice(8, 10);
+      info.cccOk = info.dcEsperado === info.dcReal;
+      if (!info.cccOk) {
+        return { estado: "invalido", msg: "El módulo 97 pasa, pero los dígitos de control del CCC no cuadran: deberían ser " + info.dcEsperado + " y son " + info.dcReal + ".", info: info };
+      }
+    }
+
+    return { estado: ok ? "valido" : "invalido", msg: ok ? "" : "El módulo 97 da " + resto + " (debería dar 1). Algún dígito está cambiado.", info: info };
+  }
+
+  var input = document.getElementById("iban");
+  var btn = document.getElementById("btn");
+  var res = document.getElementById("resultado");
+  var des = document.getElementById("desglose");
+
+  function render() {
+    var v = validarIBAN(input.value);
+    des.style.display = "none";
+    if (v.estado === "vacio") { res.className = ""; res.style.display = "none"; res.textContent = ""; return; }
+    if (v.estado === "error") { res.className = "error"; res.textContent = v.msg; return; }
+    if (v.estado === "valido") {
+      res.className = "valido";
+      res.innerHTML = "VALIDO: el IBAN está bien formado." + (v.info.pais === "ES" ? " Los dos dígitos de control del CCC coinciden." : " El módulo 97 es correcto.");
+      if (v.info.pais === "ES") {
+        des.style.display = "block";
+        des.innerHTML = "<b>País:</b> " + v.info.pais + " · <b>Longitud:</b> " + v.info.longitud + "<br><b>Banco:</b> " + v.info.banco + " · <b>Sucursal:</b> " + v.info.sucursal + "<br><b>Dígitos de control:</b> " + v.info.dcReal;
+      }
+    } else {
+      res.className = "invalido";
+      res.innerHTML = "INVALIDO: " + v.msg;
+    }
+  }
+
+  input.addEventListener("input", render);
+  btn.addEventListener("click", render);
+  input.addEventListener("keydown", function (e) { if (e.key === "Enter") render(); });
+})();
+</script>
+</body>
+</html>
