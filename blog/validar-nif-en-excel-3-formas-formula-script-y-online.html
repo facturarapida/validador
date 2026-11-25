@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validar NIF en Excel: 3 formas (fórmula, script y online)</title>
+<meta name="description" content="Tienes 300 clientes en una hoja y sospechas que una docena de NIF están mal. Hacerlo a mano no es opción. Hay tres formas de resolverlo en Excel, de menos ">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://facturarapida.github.io/validador/blog/validar-nif-en-excel-3-formas-formula-script-y-online.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Validar NIF en Excel: 3 formas (fórmula, script y online)">
+<meta property="og:description" content="Tienes 300 clientes en una hoja y sospechas que una docena de NIF están mal. Hacerlo a mano no es opción. Hay tres formas de resolverlo en Excel, de menos ">
+<meta property="og:url" content="https://facturarapida.github.io/validador/blog/validar-nif-en-excel-3-formas-formula-script-y-online.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Validar NIF en Excel: 3 formas (fórmula, script y online)","description":"Tienes 300 clientes en una hoja y sospechas que una docena de NIF están mal. Hacerlo a mano no es opción. Hay tres formas de resolverlo en Excel, de menos ","datePublished":"2026-11-25","dateModified":"2026-11-25","inLanguage":"es-ES","author":{"@type":"Organization","name":"FacturaRapida","url":"https://facturarapida.github.io/validador/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://facturarapida.github.io/validador/blog/validar-nif-en-excel-3-formas-formula-script-y-online.html}}
+</script>
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--line:#e4e7eb;--accent:#2563eb;--bg:#f7f8fa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header.site{background:#fff;border-bottom:1px solid var(--line)}
+header.site .in{max-width:780px;margin:0 auto;padding:14px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+header.site a{color:var(--muted);text-decoration:none;font-size:15px}
+header.site a:hover{color:var(--accent)}
+header.site .brand{font-weight:800;color:var(--ink);font-size:17px}
+main{max-width:780px;margin:26px auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:34px 38px}
+h1{font-size:1.85rem;line-height:1.25;margin:0 0 18px}
+h2{font-size:1.3rem;margin:32px 0 10px}
+h3{font-size:1.1rem;margin:24px 0 8px}
+p{margin:0 0 16px}
+ul,ol{margin:0 0 18px;padding-left:22px}
+li{margin-bottom:6px}
+code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:.92em}
+a{color:var(--accent)}
+.tw{overflow-x:auto;margin:0 0 20px}
+table{border-collapse:collapse;width:100%;font-size:.94rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f0f3f7}
+.cta{margin:34px 0 0;padding:20px 22px;border-radius:10px;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff}
+.cta strong{display:block;font-size:1.08rem;margin-bottom:6px}
+.cta a{color:#ffd54d;font-weight:700;text-decoration:none}
+.cta a:hover{text-decoration:underline}
+footer{max-width:780px;margin:0 auto 40px;padding:0 20px;color:var(--muted);font-size:.85rem}
+@media(max-width:640px){main{margin:14px;padding:22px}}
+</style>
+</head>
+<body>
+<header class="site"><div class="in">
+<a class="brand" href="https://facturarapida.github.io/validador/">FacturaRapida</a>
+<a href="https://facturarapida.github.io/validador/">Validador gratis</a>
+<a href="https://facturarapida.github.io/validador/blog/">Guías</a>
+<a href="https://facturarapida.github.io/validador/pack/">Pack completo</a>
+</div></header>
+<main>
+<h1>Validar NIF en Excel: 3 formas (fórmula, script y online)</h1>
+<p>Tienes 300 clientes en una hoja y sospechas que una docena de NIF están mal. Hacerlo a mano no es opción. Hay tres formas de resolverlo en Excel, de menos a más potente: una fórmula, un script en VBA y un validador online.</p>
+<p>Antes de nada, normaliza la columna: los NIF tienen que llegar en mayúsculas, sin espacios y sin guiones.</p>
+<p>``<code>excel =ESPACIOS(MAYUSC(SUSTITUIR(A2;"-";""))) </code>``</p>
+<h2>Los tres formatos que hay que distinguir</h2>
+<div class="tw"><table><thead><tr><th>Tipo</th><th>Formato</th><th>Ejemplo</th><th>Validación</th></tr></thead><tbody><tr><td>DNI</td><td>8 dígitos + letra</td><td>12345678Z</td><td>número módulo 23</td></tr><tr><td>NIE</td><td>X/Y/Z + 7 dígitos + letra</td><td>X1234567L</td><td>X=0, Y=1, Z=2 y módulo 23</td></tr><tr><td>CIF de empresa</td><td>letra + 7 dígitos + control</td><td>B12345674</td><td>suma de control módulo 10</td></tr></tbody></table></div>
+<p>La tabla de letras del DNI y del NIE es siempre la misma: <code>TRWAGMYFPDXBNJZSQVHLCKE</code>. El CIF usa otra lógica y admite dígito o letra, así que una fórmula que solo compruebe "módulo 23" te dará falsos errores con las empresas.</p>
+<h2>Forma 1: fórmula (solo DNI y NIE)</h2>
+<p>Para un DNI en <code>A2</code>, esta fórmula devuelve <code>OK</code> o <code>Mal</code>:</p>
+<p>``<code>excel =SI(DERECHA(A2;1)=EXTRAE("TRWAGMYFPDXBNJZSQVHLCKE";RESIDUO(VALOR(IZQUIERDA(A2;8));23)+1;1);"OK";"Mal") </code>``</p>
+<p>Funciona con <code>12345678Z</code> y con <code>54362315K</code>. Para un NIE hay que convertir la letra inicial en número antes de dividir:</p>
+<p>``<code>excel =SI(DERECHA(A2;1)=EXTRAE("TRWAGMYFPDXBNJZSQVHLCKE";RESIDUO(VALOR(SUSTITUIR(SUSTITUIR(SUSTITUIR(IZQUIERDA(A2;8);"X";"0");"Y";"1");"Z";"2"));23)+1;1);"OK";"Mal") </code>``</p>
+<p>Comprueba los tres casos:</p>
+<ul><li><code>X1234567L</code>: 01234567 → resto 19 → L. OK.</li><li><code>Y1234567X</code>: 11234567 → resto 10 → X. OK.</li><li><code>Z1234567R</code>: 21234567 → resto 1 → R. OK.</li></ul>
+<p>Es la opción más rápida si solo tienes personas físicas, pero se queda corta con sociedades y es difícil de mantener. Y ojo: si el número tiene menos de 8 cifras, <code>VALOR</code> no rellena ceros, así que el resultado será erróneo.</p>
+<h3>El CIF en una fórmula (Excel 365 o 2021)</h3>
+<p>Con funciones matriciales dinámicas se puede hacer en una sola celda:</p>
+<p>``<code>excel =LET(c;DERECHA(A2;1);n;EXTRAE(A2;2;7);d;--EXTRAE(n;SECUENCIA(7);1); t;SI(RESIDUO(SECUENCIA(7);2)=1;2*d;d);s;t-9*(t&gt;9); k;RESIDUO(10-RESIDUO(SUMA(s);10);10);l;EXTRAE("JABCDEFGHI";k+1;1); SI(O(c=k&amp;"";c=l);"OK";"Mal")) </code>``</p>
+<p>Hace lo mismo que el cálculo a mano: duplica las posiciones impares, suma las cifras de los resultados de dos dígitos, suma todo y saca el control. Con <code>B1234567</code> el total es 26, el control es 4 y el NIF completo <code>B12345674</code>.</p>
+<p>Si tu Excel es anterior a 2021 no tiene <code>LET</code> ni <code>SECUENCIA</code>: usa columnas auxiliares (una por dígito) o pasa directamente al script.</p>
+<h2>Forma 2: script en VBA (DNI, NIE y CIF)</h2>
+<p>Pulsa <code>Alt + F11</code>, inserta un módulo y pega esto. Luego usa <code>=ValidarNIF(A2)</code> en la hoja.</p>
+<p>```vba Function ValidarNIF(ByVal nif As String) As Boolean Dim s As String, i As Integer, suma As Integer Dim d As Integer, c As String s = UCase(Replace(Replace(Trim(nif), "-", ""), " ", "")) If Len(s) &lt;&gt; 9 Then Exit Function</p>
+<p>Select Case Left(s, 1) Case "X", "Y", "Z"   ' NIE s = Replace(Replace(Replace(Left(s, 1), "X", "0"), "Y", "1"), "Z", "2") &amp; Mid(s, 2) ValidarNIF = (Right(s, 1) = Mid("TRWAGMYFPDXBNJZSQVHLCKE", (CLng(Left(s, 8)) Mod 23) + 1, 1))</p>
+<p>Case "0" To "9"      ' DNI ValidarNIF = (Right(s, 1) = Mid("TRWAGMYFPDXBNJZSQVHLCKE", (CLng(Left(s, 8)) Mod 23) + 1, 1))</p>
+<p>Case Else            ' CIF For i = 2 To 8 d = CInt(Mid(s, i, 1)) If i Mod 2 = 1 Then suma = suma + d Else d = d * 2 suma = suma + IIf(d &gt; 9, d - 9, d) End If Next i suma = (10 - (suma Mod 10)) Mod 10 c = Mid("JABCDEFGHI", suma + 1, 1) ValidarNIF = (Right(s, 1) = CStr(suma)) Or (Right(s, 1) = c) End Select End Function ```</p>
+<p>Ventajas: valida los tres formatos y devuelve verdadero/falso, así que puedes filtrar, contar o marcar en rojo. Inconvenientes: hay que guardar el libro como <code>.xlsm</code>, el macro puede bloquearse por la configuración de seguridad de la empresa y no funciona en Excel online ni en Google Sheets. Tampoco comprueba si el NIF existe: solo si está bien formado.</p>
+<h2>Forma 3: validador online</h2>
+<p>Sin fórmulas ni macros: pegas el NIF y te dice si la letra es correcta y de qué tipo de entidad se trata. Es la opción para comprobar un caso suelto o para el NIF de un cliente nuevo antes de darlo de alta.</p>
+<p>Dos precauciones:</p>
+<ul><li><strong>No pegues datos personales en cualquier web.</strong> Un NIF identifica a una persona; usa herramientas con política de privacidad clara y no subas listas completas de clientes.</li><li><strong>La validación no sustituye a la comprobación registral.</strong> Que la letra cuadre no significa que la empresa exista: para eso está la consulta de NIF de la AEAT y, en la UE, VIES.</li></ul>
+<h2>Cuál elegir</h2>
+<div class="tw"><table><thead><tr><th>Método</th><th>Valida CIF</th><th>Requiere macros</th><th>Sirve para listas</th><th>Riesgo con datos</th></tr></thead><tbody><tr><td>Fórmula</td><td>solo con 365/2021</td><td>no</td><td>sí, pero pesada</td><td>ninguno</td></tr><tr><td>VBA</td><td>sí</td><td>sí (<code>.xlsm</code>)</td><td>sí</td><td>ninguno</td></tr><tr><td>Online</td><td>sí</td><td>no</td><td>no, de uno en uno</td><td>depende de la web</td></tr></tbody></table></div>
+<p>Si tu caso es "revisar 300 filas una vez", el script es lo más rentable. Si es "validar cada cliente nuevo mientras hago la factura", el validador online dentro del flujo de facturación ahorra el paso de exportar y volver a importar.</p>
+<p><strong>Valida un NIF y emite la factura sin salir de la misma pantalla:</strong> <a href="https://payhip.com/b/w53Cn" rel="noopener">demo gratis de FacturaRapida</a>. El pack completo cuesta 9 €, pago único, sin suscripción.</p>
+<div class="cta">
+<strong>Prueba el validador gratis</strong>
+Comprueba el NIF, NIE o CIF de tu cliente antes de emitir la factura.
+<a href="https://payhip.com/b/w53Cn" rel="noopener">Descargar la demo gratis</a> · o llévate el <a href="https://payhip.com/b/5JhQO" rel="noopener">pack completo por 9 €</a>.
+</div>
+</main>
+<footer>FacturaRapida · Valida el NIF antes de facturar. La validación del dígito de control no acredita que el documento exista: para eso usa la consulta de la AEAT o VIES.</footer>
+</body>
+</html>

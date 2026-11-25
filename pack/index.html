@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FacturaRapida — Valida el NIF y emite la factura sin errores</title>
+<meta name="description" content="Comprueba DNI, NIE y CIF con la letra de control correcta y genera la factura en el mismo formulario. Demo gratis, pack completo 9 € en un pago único.">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="FacturaRapida — Valida el NIF y emite la factura sin errores">
+<meta property="og:description" content="Validador de NIF, NIE y CIF + generador de facturas. Demo gratis; pack completo 9 €, pago único.">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{
+    --bg:#0b1017;
+    --surface:#121a24;
+    --surface-2:#18232f;
+    --line:#253342;
+    --text:#e8eef5;
+    --muted:#9aacbd;
+    --accent:#25c281;
+    --accent-dark:#18a068;
+    --warn:#f0b429;
+    --radius:14px;
+    --max:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent)}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+  header{
+    border-bottom:1px solid var(--line);
+    background:rgba(11,16,23,.9);
+    position:sticky;top:0;z-index:10;
+    backdrop-filter:blur(8px);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;height:66px}
+  .brand{font-weight:700;letter-spacing:-.2px;font-size:18px;color:var(--text);text-decoration:none}
+  .brand span{color:var(--accent)}
+  .nav-links{display:flex;gap:20px;align-items:center}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:15px}
+  .nav-links a:hover{color:var(--text)}
+  @media (max-width:720px){.nav-links a:not(.btn){display:none}}
+
+  .btn{
+    display:inline-block;padding:13px 22px;border-radius:10px;
+    text-decoration:none;font-weight:650;font-size:16px;line-height:1.2;
+    border:1px solid transparent;transition:transform .12s ease,background .12s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent);color:#04150d}
+  .btn-primary:hover{background:var(--accent-dark);color:#fff}
+  .btn-ghost{border-color:var(--line);color:var(--text);background:var(--surface)}
+  .btn-ghost:hover{border-color:#3a4d61}
+  .btn-lg{padding:16px 28px;font-size:17px}
+
+  .hero{padding:72px 0 20px;display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+  @media (max-width:900px){.hero{grid-template-columns:1fr;gap:36px;padding-top:48px}}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid #23543f;background:#0f2a20;color:#7ee2b3;
+    padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.02em;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
+  h1{font-size:44px;line-height:1.12;letter-spacing:-1.2px;margin:18px 0 16px;font-weight:750}
+  @media (max-width:900px){h1{font-size:35px}}
+  .lead{color:var(--muted);font-size:19px;margin:0 0 28px;max-width:34em}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .micro{color:#7c8fa1;font-size:13.5px;margin-top:14px}
+
+  /* Mockup en texto */
+  .mock{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:0;overflow:hidden;
+    box-shadow:0 22px 50px -18px rgba(0,0,0,.75);
+  }
+  .mock-bar{
+    display:flex;align-items:center;gap:7px;
+    padding:11px 14px;border-bottom:1px solid var(--line);background:var(--surface-2);
+  }
+  .mock-bar i{width:10px;height:10px;border-radius:50%;background:#33465a;display:block}
+  .mock-bar span{margin-left:8px;font-size:12px;color:#7c8fa1;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+  pre.mock-body{
+    margin:0;padding:18px 16px 20px;
+    font-family:ui-monospace,SFMono-Regular,Consolas,"Courier New",monospace;
+    font-size:12.4px;line-height:1.72;color:#cfe0ef;overflow-x:auto;
+  }
+  .ok{color:var(--accent);font-weight:700}
+  .dim{color:#6f8399}
+  .num{color:#e6f0fa}
+
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  h2{font-size:29px;letter-spacing:-.6px;margin:0 0 10px;font-weight:700}
+  .sub{color:var(--muted);margin:0 0 34px;max-width:46em}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:860px){.grid-3{grid-template-columns:1fr}}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px 22px;
+  }
+  .card h3{margin:12px 0 8px;font-size:18.5px;letter-spacing:-.2px}
+  .card p{margin:0;color:var(--muted);font-size:15.5px}
+  .ico{
+    width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    background:#0f2a20;color:var(--accent);font-weight:800;font-size:15px;
+    border:1px solid #23543f;
+  }
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;counter-reset:s}
+  @media (max-width:860px){.steps{grid-template-columns:1fr}}
+  .step{counter-increment:s;border-left:2px solid #253342;padding-left:18px}
+  .step::before{
+    content:counter(s);display:block;color:var(--accent);font-weight:800;font-size:13px;letter-spacing:.08em;
+  }
+  .step h3{margin:6px 0 6px;font-size:17px}
+  .step p{margin:0;color:var(--muted);font-size:15px}
+
+  .price{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+  @media (max-width:860px){.price{grid-template-columns:1fr}}
+  .price-box{
+    background:linear-gradient(180deg,#14212c,#101821);
+    border:1px solid #2a4b3c;border-radius:16px;padding:30px;
+  }
+  .amount{font-size:52px;font-weight:800;letter-spacing:-2px;line-height:1}
+  .amount small{font-size:16px;font-weight:500;color:var(--muted);letter-spacing:0}
+  ul.list{list-style:none;padding:0;margin:18px 0 24px}
+  ul.list li{padding:7px 0 7px 26px;position:relative;color:#cfdae5;font-size:15.5px}
+  ul.list li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:800}
+
+  details{
+    background:var(--surface);border:1px solid var(--line);border-radius:11px;
+    padding:0;margin-bottom:10px;
+  }
+  details[open]{border-color:#2f4457}
+  summary{
+    cursor:pointer;padding:16px 20px;font-weight:600;font-size:16.5px;
+    list-style:none;display:flex;justify-content:space-between;gap:14px;align-items:center;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--accent);font-weight:700;font-size:20px;line-height:1}
+  details[open] summary::after{content:"–"}
+  details p{margin:0;padding:0 20px 18px;color:var(--muted);font-size:15.5px}
+
+  .final{
+    text-align:center;background:radial-gradient(ellipse at top,#12342a 0%,#0b1017 62%);
+    border-top:1px solid var(--line);
+  }
+  .final h2{margin-bottom:12px}
+  .final p{color:var(--muted);max-width:34em;margin:0 auto 26px}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 40px;color:#7c8fa1;font-size:13px}
+  footer p{margin:0 0 6px}
+  .note{font-size:13px;color:#7c8fa1}
+</style>
+<link rel="canonical" href="https://facturarapida.github.io/validador/pack/">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">Factura<span>Rapida</span></a>
+    <nav class="nav-links">
+      <a href="#beneficios">Qué hace</a>
+      <a href="#precio">Precio</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-primary" data-buy href="https://payhip.com/b/5JhQO" rel="noopener">Comprar — 9 €</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="wrap hero">
+    <div>
+      <span class="badge"><span class="dot"></span> Demo gratis · sin registro</span>
+      <h1>Valida el NIF de tu cliente antes de emitir la factura</h1>
+      <p class="lead">DNI, NIE y CIF comprobados con su letra de control. Si el número está mal, lo ves antes de numerar la factura, no cuando te la devuelven.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" data-demo href="https://payhip.com/b/w53Cn" rel="noopener">Probar la demo gratis</a>
+        <a class="btn btn-ghost btn-lg" href="#precio">Ver el pack · 9 €</a>
+      </div>
+      <p class="micro">Pago único en Payhip. Sin suscripción mensual.</p>
+    </div>
+
+    <div class="mock" role="img" aria-label="Ejemplo de factura generada con el NIF del cliente ya validado">
+      <div class="mock-bar"><i></i><i></i><i></i><span>factura_2026-014.pdf</span></div>
+<pre class="mock-body">FACTURA 2026-014          <span class="dim">FacturaRapida</span>
+Fecha: 24/11/2026          Serie A · nº 014
+
+Cliente
+Talleres Peña, S.L.
+NIF <span class="num">B12345674</span>  <span class="ok">✔ letra correcta</span>
+C/ Mayor 14, 46001 Valencia
+
+Concepto                  Cant.   Precio    Total
+Mantenimiento mensual        1   120,00   120,00
+Formación 2 h                2    45,00    90,00
+<span class="dim">─────────────────────────────────────────────</span>
+                            Base     <span class="num">210,00</span>
+                            IVA 21%   <span class="num"> 44,10</span>
+                            <span class="ok">TOTAL    254,10 €</span>
+
+<span class="dim">Validado antes de numerar · sin huecos de serie</span></pre>
+    </div>
+  </div>
+
+  <section id="beneficios">
+    <div class="wrap">
+      <h2>Tres cosas, bien hechas</h2>
+      <p class="sub">No es un ERP. Es el trozo que se rompe cuando emites facturas a mano.</p>
+      <div class="grid-3">
+        <article class="card">
+          <div class="ico" aria-hidden="true">1</div>
+          <h3>NIF correcto, no "más o menos"</h3>
+          <p>Comprueba la letra del DNI y del NIE con el módulo 23 y el dígito de control del CIF con su propia suma. Te dice qué tipo de entidad es y dónde está el error: número, letra o formato.</p>
+        </article>
+        <article class="card">
+          <div class="ico" aria-hidden="true">2</div>
+          <h3>Factura completa en el mismo formulario</h3>
+          <p>Base, tipo y cuota de IVA calculados. Numeración correlativa por serie, fecha de operación y referencia al pedido. Sin exportar a otra hoja para cuadrar totales.</p>
+        </article>
+        <article class="card">
+          <div class="ico" aria-hidden="true">3</div>
+          <h3>Empieza gratis, paga una vez</h3>
+          <p>La demo se prueba sin registro y con tus propios NIF. El pack completo son 9 € en un pago: sin cuota mensual ni límite de facturas que te obligue a subir de plan.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Del NIF al PDF</h2>
+      <p class="sub">Tres pasos, sin salir de la misma pantalla.</p>
+      <div class="steps">
+        <div class="step">
+          <h3>Pega el NIF</h3>
+          <p>Con o sin guiones, en minúsculas o mayúsculas. Se normaliza y se valida al instante.</p>
+        </div>
+        <div class="step">
+          <h3>Revisa los datos</h3>
+          <p>Razón social, domicilio fiscal y concepto. El validador avisa si el control no cuadra.</p>
+        </div>
+        <div class="step">
+          <h3>Emite y descarga</h3>
+          <p>Número correlativo asignado, IVA desglosado y PDF listo para enviar al cliente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="precio">
+    <div class="wrap price">
+      <div>
+        <h2>9 €, una vez</h2>
+        <p class="sub">Menos que una hora de gestoría, y no se cobra todos los meses. Si antes quieres ver cómo funciona, la demo es gratis y no pide tarjeta.</p>
+        <p class="note">El precio y las condiciones finales se muestran en la página de Payhip antes de pagar.</p>
+      </div>
+      <div class="price-box">
+        <div class="amount">9 € <small>pago único</small></div>
+        <ul class="list">
+          <li>Validador de DNI, NIE y CIF</li>
+          <li>Generador de facturas con IVA desglosado</li>
+          <li>Numeración correlativa por serie</li>
+          <li>Sin suscripción ni cuota mensual</li>
+        </ul>
+        <a class="btn btn-primary btn-lg" data-buy href="https://payhip.com/b/5JhQO" rel="noopener">Comprar el pack</a>
+        <p class="micro">Demo gratis antes de comprar · pago gestionado por Payhip</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2>Preguntas frecuentes</h2>
+      <p class="sub">Lo que se pregunta antes de comprar.</p>
+
+      <details>
+        <summary>¿Qué valida exactamente el comprobador de NIF?</summary>
+        <p>DNI y NIE con el módulo 23 sobre la tabla TRWAGMYFPDXBNJZSQVHLCKE (en el NIE, X, Y y Z se convierten en 0, 1 y 2). En el CIF comprueba el dígito de control con su propia suma y admite tanto el formato numérico como el de letra (JABCDEFGHI). Además detecta el tipo de entidad por la letra inicial.</p>
+      </details>
+
+      <details>
+        <summary>¿Sirve para NIF de otros países de la UE?</summary>
+        <p>El validador cubre los formatos españoles. Para un número intracomunitario de otro país hay que comprobarlo en VIES, el sistema de la Comisión Europea; el formato cambia en cada Estado miembro y no se calcula con la tabla española.</p>
+      </details>
+
+      <details>
+        <summary>¿La letra correcta garantiza que la empresa existe?</summary>
+        <p>No. El dígito de control solo confirma que el número está bien formado; cualquiera puede construir uno válido. Para comprobar la existencia de un NIF español se usa la consulta de la AEAT, y para el resto de la UE, VIES.</p>
+      </details>
+
+      <details>
+        <summary>¿Necesito instalar algo o crear una cuenta?</summary>
+        <p>La demo se prueba desde la página de Payhip, sin registro. El pack se descarga después de la compra y se usa con tus datos; no hay que subir tu cartera de clientes a ningún servicio.</p>
+      </details>
+
+      <details>
+        <summary>¿Las facturas llevan numeración correlativa?</summary>
+        <p>Sí: cada serie numera de forma consecutiva, sin huecos. Si una factura está mal, lo correcto es emitir una rectificativa que la referencie, no reutilizar el número.</p>
+      </details>
+
+      <details>
+        <summary>¿Esto cumple con Verifactu?</summary>
+        <p>La herramienta ayuda a emitir facturas con los datos obligatorios del Reglamento de facturación (RD 1619/2012): NIF, razón social, domicilio, desglose de IVA y numeración. No es un sistema Verifactu homologado ni sustituye a tu asesoría: si estás obligado a Verifactu, consúltalo con tu gestor antes de cambiar de software.</p>
+      </details>
+
+      <details>
+        <summary>¿Vale para autónomos y para sociedades?</summary>
+        <p>Sí. Un autónomo emite con su DNI o NIE y una sociedad con su NIF de empresa; el validador distingue ambos casos y aplica el algoritmo que corresponde a cada uno.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Prueba un NIF tuyo ahora</h2>
+      <p>Si la letra está mal, lo vas a ver en dos segundos. Y si está bien, ya tienes la factura a medio hacer.</p>
+      <a class="btn btn-primary btn-lg" data-demo href="https://payhip.com/b/w53Cn" rel="noopener">Abrir la demo gratis</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>FacturaRapida</strong> — validador de NIF y generador de facturas para autónomos y pequeñas empresas.</p>
+    <p>Herramienta de apoyo: no sustituye el asesoramiento fiscal ni la comprobación registral de un NIF. © 2026.</p>
+  </div>
+</footer>
+
+<!-- Enlaces: si el pack de pago tiene otra URL en Payhip, cambia solo los dos enlaces marcados con data-buy. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "FacturaRapida",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "es-ES",
+      "description": "Validador de NIF, NIE y CIF con letra de control y generador de facturas con IVA desglosado y numeración correlativa.",
+      "featureList": [
+        "Validación de DNI y NIE por módulo 23",
+        "Validación de CIF por dígito de control",
+        "Generación de facturas con base, IVA y total",
+        "Numeración correlativa por serie"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "9.00",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://payhip.com/b/5JhQO"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué valida exactamente el comprobador de NIF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "DNI y NIE con el módulo 23 sobre la tabla TRWAGMYFPDXBNJZSQVHLCKE (en el NIE, X, Y y Z se convierten en 0, 1 y 2). En el CIF comprueba el dígito de control con su propia suma y admite el formato numérico y el de letra (JABCDEFGHI). Además detecta el tipo de entidad por la letra inicial."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Sirve para NIF de otros países de la UE?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El validador cubre los formatos españoles. Para un número intracomunitario de otro país hay que comprobarlo en VIES, el sistema de la Comisión Europea; el formato cambia en cada Estado miembro y no se calcula con la tabla española."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿La letra correcta garantiza que la empresa existe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El dígito de control solo confirma que el número está bien formado; cualquiera puede construir uno válido. Para comprobar la existencia de un NIF español se usa la consulta de la AEAT y, para el resto de la UE, VIES."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Necesito instalar algo o crear una cuenta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La demo se prueba desde la página de Payhip, sin registro. El pack se descarga después de la compra y se usa con tus datos; no hay que subir la cartera de clientes a ningún servicio."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Las facturas llevan numeración correlativa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí: cada serie numera de forma consecutiva, sin huecos. Si una factura está mal, lo correcto es emitir una rectificativa que la referencie, no reutilizar el número."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Esto cumple con Verifactu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta ayuda a emitir facturas con los datos obligatorios del Reglamento de facturación (RD 1619/2012): NIF, razón social, domicilio, desglose de IVA y numeración. No es un sistema Verifactu homologado ni sustituye a la asesoría: si estás obligado a Verifactu, consúltalo con tu gestor antes de cambiar de software."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Vale para autónomos y para sociedades?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Un autónomo emite con su DNI o NIE y una sociedad con su NIF de empresa; el validador distingue ambos casos y aplica el algoritmo que corresponde a cada uno."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>

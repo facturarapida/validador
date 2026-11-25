@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo validar el NIF de un cliente antes de emitir la factura (DNI, NIE y CIF)</title>
+<meta name="description" content="Una factura con el NIF mal escrito no es un detalle estético: el cliente no puede deducirse la cuota de IVA, su gestoría la rechaza y tú acabas emitiendo u">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://facturarapida.github.io/validador/blog/como-validar-el-nif-de-un-cliente-antes-de-emitir-la-factura-dni-nie-y.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Cómo validar el NIF de un cliente antes de emitir la factura (DNI, NIE y CIF)">
+<meta property="og:description" content="Una factura con el NIF mal escrito no es un detalle estético: el cliente no puede deducirse la cuota de IVA, su gestoría la rechaza y tú acabas emitiendo u">
+<meta property="og:url" content="https://facturarapida.github.io/validador/blog/como-validar-el-nif-de-un-cliente-antes-de-emitir-la-factura-dni-nie-y.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Cómo validar el NIF de un cliente antes de emitir la factura (DNI, NIE y CIF)","description":"Una factura con el NIF mal escrito no es un detalle estético: el cliente no puede deducirse la cuota de IVA, su gestoría la rechaza y tú acabas emitiendo u","datePublished":"2026-11-25","dateModified":"2026-11-25","inLanguage":"es-ES","author":{"@type":"Organization","name":"FacturaRapida","url":"https://facturarapida.github.io/validador/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://facturarapida.github.io/validador/blog/como-validar-el-nif-de-un-cliente-antes-de-emitir-la-factura-dni-nie-y.html}}
+</script>
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--line:#e4e7eb;--accent:#2563eb;--bg:#f7f8fa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header.site{background:#fff;border-bottom:1px solid var(--line)}
+header.site .in{max-width:780px;margin:0 auto;padding:14px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+header.site a{color:var(--muted);text-decoration:none;font-size:15px}
+header.site a:hover{color:var(--accent)}
+header.site .brand{font-weight:800;color:var(--ink);font-size:17px}
+main{max-width:780px;margin:26px auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:34px 38px}
+h1{font-size:1.85rem;line-height:1.25;margin:0 0 18px}
+h2{font-size:1.3rem;margin:32px 0 10px}
+h3{font-size:1.1rem;margin:24px 0 8px}
+p{margin:0 0 16px}
+ul,ol{margin:0 0 18px;padding-left:22px}
+li{margin-bottom:6px}
+code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:.92em}
+a{color:var(--accent)}
+.tw{overflow-x:auto;margin:0 0 20px}
+table{border-collapse:collapse;width:100%;font-size:.94rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f0f3f7}
+.cta{margin:34px 0 0;padding:20px 22px;border-radius:10px;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff}
+.cta strong{display:block;font-size:1.08rem;margin-bottom:6px}
+.cta a{color:#ffd54d;font-weight:700;text-decoration:none}
+.cta a:hover{text-decoration:underline}
+footer{max-width:780px;margin:0 auto 40px;padding:0 20px;color:var(--muted);font-size:.85rem}
+@media(max-width:640px){main{margin:14px;padding:22px}}
+</style>
+</head>
+<body>
+<header class="site"><div class="in">
+<a class="brand" href="https://facturarapida.github.io/validador/">FacturaRapida</a>
+<a href="https://facturarapida.github.io/validador/">Validador gratis</a>
+<a href="https://facturarapida.github.io/validador/blog/">Guías</a>
+<a href="https://facturarapida.github.io/validador/pack/">Pack completo</a>
+</div></header>
+<main>
+<h1>Cómo validar el NIF de un cliente antes de emitir la factura (DNI, NIE y CIF)</h1>
+<p>Una factura con el NIF mal escrito no es un detalle estético: el cliente no puede deducirse la cuota de IVA, su gestoría la rechaza y tú acabas emitiendo una rectificativa. Validar el número antes de emitir cuesta dos minutos.</p>
+<p>Estos son los tres formatos y cómo se comprueba cada uno a mano.</p>
+<h2>Qué exige el reglamento de facturación</h2>
+<p>El Reglamento por el que se regulan las obligaciones de facturación (RD 1619/2012) pide, entre otros datos, el NIF, el nombre o razón social y el domicilio del emisor <strong>y del destinatario</strong> (art. 6), además de una numeración correlativa (art. 5). Si el NIF del destinatario está mal, la factura identifica a otra persona o a nadie.</p>
+<p>A eso se suma Verifactu (RD 1007/2023): el software registra cada factura con su huella y la encadena con la anterior, así que un error de identificación queda registrado.</p>
+<h2>Los formatos, en una tabla</h2>
+<div class="tw"><table><thead><tr><th>Tipo</th><th>Formato</th><th>Ejemplo</th><th>Cómo se valida</th></tr></thead><tbody><tr><td>DNI (persona física española)</td><td>8 dígitos + letra</td><td>12345678Z</td><td>número módulo 23</td></tr><tr><td>NIE (extranjero con residencia)</td><td>X/Y/Z + 7 dígitos + letra</td><td>X1234567L</td><td>la letra inicial se convierte en 0/1/2 y se aplica módulo 23</td></tr><tr><td>NIF de empresa (CIF)</td><td>letra + 7 dígitos + dígito o letra</td><td>B12345674</td><td>suma de control módulo 10</td></tr><tr><td>NIF intracomunitario</td><td>2 letras de país + número</td><td>FR12345678901</td><td>se comprueba en VIES</td></tr></tbody></table></div>
+<h2>DNI: 8 dígitos, una letra y una tabla de 23</h2>
+<p>La letra sale del resto de dividir el número entre 23 y buscar ese resto (de 0 a 22) en esta cadena:</p>
+<p><code>TRWAGMYFPDXBNJZSQVHLCKE</code></p>
+<ul><li>12345678 entre 23 → resto 14 → letra <strong>Z</strong> → <code>12345678Z</code></li><li>54362315 entre 23 → resto 21 → letra <strong>K</strong> → <code>54362315K</code></li><li>1234567 entre 23 → resto 19 → letra <strong>L</strong> → <code>01234567L</code></li></ul>
+<p>Ese último caso explica la mitad de los errores: sin los ceros, el módulo se calcula sobre 7 cifras y la letra cambia. Rellena a 8 dígitos antes de dividir.</p>
+<h2>NIE: la letra inicial se convierte en número</h2>
+<p>Para el NIE se sustituye X por 0, Y por 1 y Z por 2. El resto del cálculo es idéntico al del DNI:</p>
+<ul><li><code>X1234567</code> → 01234567 → resto 19 → <strong>L</strong> → <code>X1234567L</code></li><li><code>Y1234567</code> → 11234567 → resto 10 → <strong>X</strong> → <code>Y1234567X</code></li><li><code>Z1234567</code> → 21234567 → resto 1 → <strong>R</strong> → <code>Z1234567R</code></li></ul>
+<p>Si te pasan el NIE con espacios o guiones (<code>x-1234567-l</code>), normaliza antes de comparar: mayúsculas y sin separadores.</p>
+<h2>CIF de empresa: aquí el cálculo no es módulo 23</h2>
+<p>Con los siete dígitos del número:</p>
+<ol><li>Se suman los dígitos en posición par (2.ª, 4.ª y 6.ª).</li><li>Los de posición impar (1.ª, 3.ª, 5.ª y 7.ª) se duplican; si el resultado supera 9, se suman sus dos cifras.</li><li>Se suma todo y el dígito de control es <code>10 − (total módulo 10)</code>; si da 10, el control es 0.</li></ol>
+<p>Ejemplo con <code>B1234567</code>:</p>
+<ul><li>Posiciones impares duplicadas: 1→2, 3→6, 5→10→1, 7→14→5. Suma: 14</li><li>Posiciones pares: 2 + 4 + 6 = 12</li><li>Total: 26 → 10 − 6 = <strong>4</strong> → <code>B12345674</code></li></ul>
+<p>El control también puede ir como letra, con la tabla <code>JABCDEFGHI</code> (0=J, 1=A, 2=B…). El mismo número quedaría <code>B1234567D</code>, incorrecto en una S.L.: mira la columna "Control".</p>
+<h3>Qué letra lleva cada tipo de entidad</h3>
+<div class="tw"><table><thead><tr><th>Letra</th><th>Tipo de entidad</th><th>Control</th></tr></thead><tbody><tr><td>A</td><td>Sociedad anónima</td><td>dígito</td></tr><tr><td>B</td><td>Sociedad limitada</td><td>dígito</td></tr><tr><td>C</td><td>Sociedad colectiva</td><td>dígito o letra</td></tr><tr><td>D</td><td>Sociedad comanditaria</td><td>dígito o letra</td></tr><tr><td>E</td><td>Comunidad de bienes</td><td>dígito</td></tr><tr><td>F</td><td>Sociedad cooperativa</td><td>dígito o letra</td></tr><tr><td>G</td><td>Asociación o fundación</td><td>dígito o letra</td></tr><tr><td>H</td><td>Comunidad de propietarios</td><td>dígito</td></tr><tr><td>J</td><td>Sociedad civil</td><td>dígito o letra</td></tr><tr><td>N</td><td>Entidad extranjera</td><td>dígito o letra</td></tr><tr><td>P</td><td>Corporación local</td><td>letra</td></tr><tr><td>Q</td><td>Organismo autónomo</td><td>letra</td></tr><tr><td>R</td><td>Congregación religiosa</td><td>dígito o letra</td></tr><tr><td>S</td><td>Órgano de la Administración</td><td>letra</td></tr><tr><td>U</td><td>Unión temporal de empresas</td><td>dígito o letra</td></tr><tr><td>V</td><td>Sociedad agraria de transformación</td><td>dígito o letra</td></tr><tr><td>W</td><td>Establecimiento permanente</td><td>dígito o letra</td></tr></tbody></table></div>
+<p>K, L y M son formatos antiguos que aún aparecen en facturas viejas.</p>
+<h2>Los errores que más se cuelan</h2>
+<ul><li><strong>Autónomo facturado como empresa.</strong> Un autónomo no tiene CIF: su NIF es su DNI o su NIE. Si te inventas un <code>B…</code> porque "suena más profesional", la factura no identifica al cliente.</li><li><strong>Razón social distinta del nombre comercial.</strong> El NIF va con la denominación social, no con la marca de la furgoneta.</li><li><strong>Ceros a la izquierda perdidos</strong> en DNI y NIE.</li><li><strong>Confundir 0 con O y 1 con I.</strong> La O y la I no existen en la tabla de letras: si aparecen, algo se copió mal.</li><li><strong>Número de la Seguridad Social o de colegiado</strong> metido en el campo del NIF.</li><li><strong>Intracomunitario sin VIES.</strong> Para aplicar la exención del artículo 25 de la LIVA necesitas el VAT number del cliente validado en VIES.</li></ul>
+<h2>La letra correcta no significa que la empresa exista</h2>
+<p>El dígito de control solo dice que el número está bien formado: cualquiera puede escribir <code>B12345674</code> y el cálculo saldrá perfecto. Para comprobar que existe, usa la consulta de NIF de la AEAT (residentes) o VIES (UE), y contrasta la razón social en el Registro Mercantil si es una sociedad.</p>
+<h2>Checklist de 5 puntos antes de emitir</h2>
+<ol><li>NIF de 9 caracteres, sin espacios ni guiones, en mayúsculas.</li><li>Letra o dígito de control verificados con el algoritmo que toca (no todos son módulo 23).</li><li>Nombre o razón social exactamente como figura en el alta censal.</li><li>Domicilio fiscal completo, no el de la nave.</li><li>Si es intracomunitario: VIES consultado y guardado con fecha.</li></ol>
+<p>Con 50 facturas al mes esto no se hace a mano sin fallar. El validador comprueba DNI, NIE y CIF en el mismo formulario donde generas la factura.</p>
+<p><strong>Pruébalo gratis con tus propios NIF:</strong> <a href="https://payhip.com/b/w53Cn" rel="noopener">demo de FacturaRapida</a>. El pack completo, con validador y generador de facturas, cuesta 9 € en un solo pago.</p>
+<div class="cta">
+<strong>Prueba el validador gratis</strong>
+Comprueba el NIF, NIE o CIF de tu cliente antes de emitir la factura.
+<a href="https://payhip.com/b/w53Cn" rel="noopener">Descargar la demo gratis</a> · o llévate el <a href="https://payhip.com/b/5JhQO" rel="noopener">pack completo por 9 €</a>.
+</div>
+</main>
+<footer>FacturaRapida · Valida el NIF antes de facturar. La validación del dígito de control no acredita que el documento exista: para eso usa la consulta de la AEAT o VIES.</footer>
+</body>
+</html>

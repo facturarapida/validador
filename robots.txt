@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://facturarapida.github.io/validador/sitemap.xml
